@@ -1,5 +1,8 @@
 import 'package:dinamicko_programiranje/helpers/media_query.dart';
+import 'package:dinamicko_programiranje/providers/calculate_provider.dart';
+import 'package:dinamicko_programiranje/screens/task_completed_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class UnosVarijabliScreen extends StatefulWidget {
   const UnosVarijabliScreen({Key? key}) : super(key: key);
@@ -10,6 +13,12 @@ class UnosVarijabliScreen extends StatefulWidget {
 
 class _UnosVarijabliScreenState extends State<UnosVarijabliScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late double rata;
+  late double max_nabava;
+  late double max_kapacitet;
+  late double trosak_nabave;
+  late double trosak_skladistenja;
+  late Map<int, double> razdoblja;
 
   @override
   Widget build(BuildContext context) {
@@ -25,78 +34,68 @@ class _UnosVarijabliScreenState extends State<UnosVarijabliScreen> {
             child: ListView(
               children: <Widget>[
                 TextFormField(
-                  keyboardType: TextInputType.number,
-                  // Use email input type for emails.
-                  decoration: const InputDecoration(
-                      hintText: 'broj komada', labelText: 'Rata'),
-                  validator: (value) {
-                    return validateNumber(value);
-                  },
-                  // onSaved: (String value) {
-                  //   _data.email = value;
-                  // }
-                ),
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                        hintText: 'broj komada', labelText: 'Rata'),
+                    validator: (value) {
+                      return validateNumber(value);
+                    },
+                    onSaved: (value) {
+                      save(value, 1);
+                    }),
                 TextFormField(
-                  keyboardType: TextInputType.number,
-                  // Use email input type for emails.
-                  decoration: const InputDecoration(
-                      hintText: 'broj komada', labelText: 'Maksimalna nabava'),
-                  validator: (value) {
-                    return validateNumber(value);
-                  },
-                  // onSaved: (String value) {
-                  //   _data.email = value;
-                  // }
-                ),
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                        hintText: 'broj komada',
+                        labelText: 'Maksimalna nabava'),
+                    validator: (value) {
+                      return validateNumber(value);
+                    },
+                    onSaved: (value) {
+                      save(value, 2);
+                    }),
                 TextFormField(
-                  keyboardType: TextInputType.number,
-                  // Use email input type for emails.
-                  decoration: const InputDecoration(
-                      hintText: 'broj komada',
-                      labelText: 'Maksimalni kapacitet'),
-                  validator: (value) {
-                    return validateNumber(value);
-                  },
-                  // onSaved: (String value) {
-                  //   _data.email = value;
-                  // }
-                ),
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                        hintText: 'broj komada',
+                        labelText: 'Maksimalni kapacitet'),
+                    validator: (value) {
+                      return validateNumber(value);
+                    },
+                    onSaved: (value) {
+                      save(value, 3);
+                    }),
                 TextFormField(
-                  keyboardType: TextInputType.number,
-                  // Use email input type for emails.
-                  decoration: const InputDecoration(
-                      hintText: 'broj', labelText: 'Trošak nabave'),
-                  validator: (value) {
-                    return validateNumber(value);
-                  },
-                  // onSaved: (String value) {
-                  //   _data.email = value;
-                  // }
-                ),
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                        hintText: 'broj', labelText: 'Trošak nabave'),
+                    validator: (value) {
+                      return validateNumber(value);
+                    },
+                    onSaved: (value) {
+                      save(value, 4);
+                    }),
                 TextFormField(
-                  keyboardType: TextInputType.number,
-                  // Use email input type for emails.
-                  decoration: const InputDecoration(
-                      hintText: 'broj', labelText: 'Trošak skladištenja'),
-                  validator: (value) {
-                    return validateNumber(value);
-                  },
-                  // onSaved: (String value) {
-                  //   _data.email = value;
-                  // }
-                ),
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                        hintText: 'broj', labelText: 'Trošak skladištenja'),
+                    validator: (value) {
+                      return validateNumber(value);
+                    },
+                    onSaved: (value) {
+                      save(value, 5);
+                    }),
                 TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                      hintText: 'primjer: 20 40 20',
-                      labelText: 'Broj razdoblja'),
-                  validator: (value) {
-                    return validateArray(value);
-                  },
-                  // onSaved: (double.parse(value)) {
-                  //
-                  // }
-                ),
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                        hintText: 'primjer: 20 40 20',
+                        labelText: 'Broj razdoblja'),
+                    validator: (value) {
+                      return validateArray(value);
+                    },
+                    onSaved: (value) {
+                      save(value, 6);
+                    }),
                 Container(
                   width: displayWidth(context),
                   child: ElevatedButton(
@@ -122,7 +121,7 @@ class _UnosVarijabliScreenState extends State<UnosVarijabliScreen> {
       try {
         for (String broj in lista) {
           if (broj != "") {
-            int.parse(broj);
+            double.parse(broj);
           }
         }
         return null;
@@ -136,8 +135,10 @@ class _UnosVarijabliScreenState extends State<UnosVarijabliScreen> {
     if (value == null || value.isEmpty) {
       return "Unesite broj!";
     } else {
+      List<String> lista = value.split(" ");
+      if (lista.length > 1) return "Traži se samo jedan broj.";
       try {
-        int.parse(value);
+        double.parse(value);
         return null;
       } catch (FormatException) {
         return "Unesena stavka nije broj.";
@@ -148,6 +149,50 @@ class _UnosVarijabliScreenState extends State<UnosVarijabliScreen> {
   submit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      Provider.of<CalculateProvider>(context, listen: false).setup(
+          rata,
+          max_nabava,
+          max_kapacitet,
+          trosak_nabave,
+          trosak_skladistenja,
+          razdoblja);
+      openTaskCompletedScreen();
+    }
+  }
+
+  Future<void> openTaskCompletedScreen() async {
+    await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const TaskCompletedScreen()));
+  }
+
+  save(String? value, int option) {
+    switch (option) {
+      case 1:
+        rata = double.parse(value!);
+        break;
+      case 2:
+        max_nabava = double.parse(value!);
+        break;
+      case 3:
+        max_kapacitet = double.parse(value!);
+        break;
+      case 4:
+        trosak_nabave = double.parse(value!);
+        break;
+      case 5:
+        trosak_skladistenja = double.parse(value!);
+        break;
+      case 6:
+        razdoblja = {};
+        List<String> lista = value!.split(" ");
+        int brojac = 1;
+        for (String broj in lista) {
+          if (broj != "") {
+            razdoblja.putIfAbsent(brojac, () => double.parse(broj));
+            brojac++;
+          }
+        }
+        break;
     }
   }
 }

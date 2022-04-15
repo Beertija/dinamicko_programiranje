@@ -1,10 +1,10 @@
 class PostavaZadatka {
-  int rate;
-  int max_nabava;
-  int trosak_nabave;
-  int max_skladiste;
-  int trosak_skladista;
-  List<double> nabavaRazdoblja;
+  double rata;
+  double max_nabava;
+  double max_kapacitet;
+  double trosak_nabave;
+  double trosak_skladistenja;
+  Map<int, double> razdoblja;
 
-  PostavaZadatka({required this.rate, required this.max_nabava, required this.trosak_nabave, required this.max_skladiste, required this.trosak_skladista, required this.nabavaRazdoblja});
+  PostavaZadatka({required this.rata, required this.max_nabava, required this.max_kapacitet, required this.trosak_nabave, required this.trosak_skladistenja, required this.razdoblja});
 }

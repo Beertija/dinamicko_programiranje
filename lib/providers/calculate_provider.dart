@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class CalculateProvider with ChangeNotifier {
   Map<int, String> privremeniIzracuni = {};
+  int brojac = 1;
 
   PostavaZadatka _postavaZadatka = PostavaZadatka(
       rata: 0,
@@ -23,6 +24,7 @@ class CalculateProvider with ChangeNotifier {
         trosak_skladistenja: 0,
         razdoblja: {});
     privremeniIzracuni = {};
+    brojac = 1;
   }
 
   void setup(
@@ -40,11 +42,21 @@ class CalculateProvider with ChangeNotifier {
         trosak_skladistenja: trosak_skladistenja,
         razdoblja: razdoblja);
     kalkuliranjePocetnogTroska();
+    // for (int br = 2; br <= _postavaZadatka.razdoblja.length; br++) {
+    //   kalkuliranjeTroskaRazdoblja(br);
+    // }
   }
 
   void kalkuliranjePocetnogTroska() {
     double zaliha = 0;
-    int brojac = 1;
+    String postava = zaliha.toString() + " ≤ nabava(i) ≤ " + _postavaZadatka.max_kapacitet.toString();
+    privremeniIzracuni.putIfAbsent(brojac, () => postava);
+    brojac++;
+    for (double i = 0; i <= _postavaZadatka.max_kapacitet; i += _postavaZadatka.rata) {
+      String zapis = "I(" + (brojac - 1).toString() + ") = " + i.toString();
+      privremeniIzracuni.putIfAbsent(brojac, () => zapis);
+      brojac++;
+    }
     for (double nabava = _postavaZadatka.razdoblja[1]!;
         nabava <=
             (_postavaZadatka.razdoblja[1]! + _postavaZadatka.max_kapacitet);
@@ -70,32 +82,34 @@ class CalculateProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // kalkuliranjeTroskaRazdoblja(int razdoblje) {
-  //   int zaliha = 0;
-  //   int nabava = zaliha + potrazivanja[razdoblje]! - maximalni_kapacitet;
-  //   if (nabava < 0) {
-  //     nabava = 0;
-  //   }
-  //   for (;
-  //   nabava <= (potrazivanja[razdoblje]! + maximalni_kapacitet);
-  //   nabava += rate) {
-  //     privremeniIzracuni.add("[" +
-  //         nabava.toString() +
-  //         ", " +
-  //         zaliha.toString() +
-  //         "] + [" +
-  //         zaliha.toString() +
-  //         " - " +
-  //         potrazivanja[razdoblje]!.toString() +
-  //         " + " +
-  //         nabava.toString() +
-  //         "] = " +
-  //         trosak_nabave.toString() +
-  //         " + " +
-  //         (zaliha * trosak_skladistenja).toString() +
-  //         " = " +
-  //         (trosak_nabave + (zaliha * trosak_skladistenja)).toString());
-  //     zaliha += rate;
-  //   }
-  // }
+  kalkuliranjeTroskaRazdoblja(int razdoblje) {
+    double zaliha = 0;
+    double nabava = zaliha + _postavaZadatka.razdoblja[razdoblje]! - _postavaZadatka.max_kapacitet;
+    if (nabava < 0) {
+      nabava = 0;
+    }
+    for (;
+    nabava <= (_postavaZadatka.razdoblja[razdoblje]! + _postavaZadatka.max_kapacitet);
+    nabava += _postavaZadatka.rata) {
+      String zapis = "[" +
+          nabava.toString() +
+          ", " +
+          zaliha.toString() +
+          "] + [" +
+          zaliha.toString() +
+          " - " +
+          _postavaZadatka.razdoblja[razdoblje]!.toString() +
+          " + " +
+          nabava.toString() +
+          "] = " +
+          _postavaZadatka.trosak_nabave.toString() +
+          " + " +
+          (zaliha * _postavaZadatka.trosak_skladistenja).toString() +
+          " = " +
+          (_postavaZadatka.trosak_nabave + (zaliha * _postavaZadatka.trosak_skladistenja)).toString();
+      privremeniIzracuni.putIfAbsent(brojac, () => zapis);
+      brojac++;
+      zaliha += _postavaZadatka.rata;
+    }
+  }
 }

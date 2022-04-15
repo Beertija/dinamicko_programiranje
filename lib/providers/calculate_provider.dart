@@ -14,6 +14,17 @@ class CalculateProvider with ChangeNotifier {
 
   PostavaZadatka get postavaZadatka => _postavaZadatka;
 
+  void reset() {
+    _postavaZadatka = PostavaZadatka(
+        rata: 0,
+        max_nabava: 0,
+        max_kapacitet: 0,
+        trosak_nabave: 0,
+        trosak_skladistenja: 0,
+        razdoblja: {});
+    privremeniIzracuni = {};
+  }
+
   void setup(
       double rata,
       double max_nabava,

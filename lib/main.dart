@@ -1,6 +1,5 @@
 import 'package:dinamicko_programiranje/providers/calculate_provider.dart';
 import 'package:dinamicko_programiranje/screens/enter_variables_screen.dart';
-import 'package:dinamicko_programiranje/screens/task_completed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

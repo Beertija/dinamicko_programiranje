@@ -35,6 +35,34 @@ class _TaskCompletedScreenState extends State<TaskCompletedScreen> {
           body: Column(
             children: [
               Expanded(
+                flex: 2,
+                  child: Card(
+                    child: Column(
+                      children: [
+                        Text("Bok"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Column(
+                              children: [
+                                Text("20"),
+                                Text("40"),
+                                Text("60")
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                Text("400"),
+                                Text("440"),
+                                Text("480")
+                              ],
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  )),
+              Expanded(
                   flex: 8,
                   child: ListView.builder(
                       itemCount:

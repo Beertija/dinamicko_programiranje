@@ -48,6 +48,7 @@ class CalculateProvider with ChangeNotifier {
   }
 
   void kalkuliranjePocetnogTroska() {
+    //TODO razdvojiti prvi dio od prvog razdoblja u zasebne metode i napraviti zasebnu karticu za prikaz posto nema postupaka
     double zaliha = 0;
     String postava = zaliha.toString() + " ≤ nabava(i) ≤ " + _postavaZadatka.max_kapacitet.toString();
     privremeniIzracuni.putIfAbsent(brojac, () => postava);
@@ -83,6 +84,7 @@ class CalculateProvider with ChangeNotifier {
   }
 
   kalkuliranjeTroskaRazdoblja(int razdoblje) {
+    //TODO Popraviti ispis metode te način iteriranja kroz razdoblja - big task
     double zaliha = 0;
     double nabava = zaliha + _postavaZadatka.razdoblja[razdoblje]! - _postavaZadatka.max_kapacitet;
     if (nabava < 0) {

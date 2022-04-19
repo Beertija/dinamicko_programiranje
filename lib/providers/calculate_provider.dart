@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 
 class CalculateProvider with ChangeNotifier {
   Map<int, String> privremeniIzracuni = {};
+  Map<int, String> pocetnaPostava = {};
+  Map<int, int> f_i = {};
+  Map<int, int> q_i = {};
   int brojac = 1;
+  int brojacPostave = 1;
 
   PostavaZadatka _postavaZadatka = PostavaZadatka(
       rata: 0,
@@ -24,7 +28,11 @@ class CalculateProvider with ChangeNotifier {
         trosak_skladistenja: 0,
         razdoblja: {});
     privremeniIzracuni = {};
+    pocetnaPostava = {};
+    f_i = {};
+    q_i = {};
     brojac = 1;
+    brojacPostave = 1;
   }
 
   void setup(
@@ -51,12 +59,12 @@ class CalculateProvider with ChangeNotifier {
     //TODO razdvojiti prvi dio od prvog razdoblja u zasebne metode i napraviti zasebnu karticu za prikaz posto nema postupaka
     double zaliha = 0;
     String postava = zaliha.toString() + " ≤ nabava(i) ≤ " + _postavaZadatka.max_kapacitet.toString();
-    privremeniIzracuni.putIfAbsent(brojac, () => postava);
-    brojac++;
+    pocetnaPostava.putIfAbsent(brojacPostave, () => postava);
+    brojacPostave++;
     for (double i = 0; i <= _postavaZadatka.max_kapacitet; i += _postavaZadatka.rata) {
-      String zapis = "I(" + (brojac - 1).toString() + ") = " + i.toString();
-      privremeniIzracuni.putIfAbsent(brojac, () => zapis);
-      brojac++;
+      String zapis = "I(" + (brojacPostave - 1).toString() + ") = " + i.toString();
+      pocetnaPostava.putIfAbsent(brojacPostave, () => zapis);
+      brojacPostave++;
     }
     for (double nabava = _postavaZadatka.razdoblja[1]!;
         nabava <=
@@ -77,6 +85,9 @@ class CalculateProvider with ChangeNotifier {
                   (zaliha * _postavaZadatka.trosak_skladistenja))
               .toString();
       privremeniIzracuni.putIfAbsent(brojac, () => izracun);
+      f_i.putIfAbsent(brojac, () => zaliha.toInt());
+      q_i.putIfAbsent(brojac, () => (_postavaZadatka.trosak_nabave +
+          (zaliha * _postavaZadatka.trosak_skladistenja)).toInt());
       brojac++;
       zaliha += _postavaZadatka.rata;
     }

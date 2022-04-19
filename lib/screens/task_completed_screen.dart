@@ -1,3 +1,5 @@
+import 'package:dinamicko_programiranje/components/razdoblje_card_template.dart';
+import 'package:dinamicko_programiranje/helpers/media_query.dart';
 import 'package:dinamicko_programiranje/providers/calculate_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +24,8 @@ class _TaskCompletedScreenState extends State<TaskCompletedScreen> {
           appBar: AppBar(
             leading: GestureDetector(
                 onTap: () {
-                  Provider.of<CalculateProvider>(context, listen: false).reset();
+                  Provider.of<CalculateProvider>(context, listen: false)
+                      .reset();
                   Navigator.pop(context);
                 },
                 child: const Icon(
@@ -34,34 +37,9 @@ class _TaskCompletedScreenState extends State<TaskCompletedScreen> {
           ),
           body: Column(
             children: [
-              Expanded(
-                flex: 2,
-                  child: Card(
-                    child: Column(
-                      children: [
-                        Text("Bok"),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Column(
-                              children: [
-                                Text("20"),
-                                Text("40"),
-                                Text("60")
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Text("400"),
-                                Text("440"),
-                                Text("480")
-                              ],
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  )),
+              const Expanded(
+                  flex: 3,
+                  child: RazdobljeCard()),
               Expanded(
                   flex: 8,
                   child: ListView.builder(

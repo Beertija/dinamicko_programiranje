@@ -1,9 +1,11 @@
+import 'package:dinamicko_programiranje/models/pocetno_stanje.dart';
 import 'package:dinamicko_programiranje/models/postava_zadatka.dart';
 import 'package:flutter/material.dart';
 
 class CalculateProvider with ChangeNotifier {
   Map<int, String> privremeniIzracuni = {};
-  Map<int, String> pocetnaPostava = {};
+  List<PocetnoStanje> pocetnaPostava = [];
+  String postavaPocetka = "";
   Map<int, int> f_i = {};
   Map<int, int> q_i = {};
   int brojac = 1;
@@ -28,7 +30,8 @@ class CalculateProvider with ChangeNotifier {
         trosak_skladistenja: 0,
         razdoblja: {});
     privremeniIzracuni = {};
-    pocetnaPostava = {};
+    pocetnaPostava = [];
+    postavaPocetka = "";
     f_i = {};
     q_i = {};
     brojac = 1;
@@ -36,12 +39,12 @@ class CalculateProvider with ChangeNotifier {
   }
 
   void setup(
-      double rata,
-      double max_nabava,
-      double max_kapacitet,
-      double trosak_nabave,
-      double trosak_skladistenja,
-      Map<int, double> razdoblja) {
+      int rata,
+      int max_nabava,
+      int max_kapacitet,
+      int trosak_nabave,
+      int trosak_skladistenja,
+      Map<int, int> razdoblja) {
     _postavaZadatka = PostavaZadatka(
         rata: rata,
         max_nabava: max_nabava,
@@ -57,16 +60,14 @@ class CalculateProvider with ChangeNotifier {
 
   void kalkuliranjePocetnogTroska() {
     //TODO razdvojiti prvi dio od prvog razdoblja u zasebne metode i napraviti zasebnu karticu za prikaz posto nema postupaka
-    double zaliha = 0;
-    String postava = zaliha.toString() + " ≤ nabava(i) ≤ " + _postavaZadatka.max_kapacitet.toString();
-    pocetnaPostava.putIfAbsent(brojacPostave, () => postava);
-    brojacPostave++;
-    for (double i = 0; i <= _postavaZadatka.max_kapacitet; i += _postavaZadatka.rata) {
-      String zapis = "I(" + (brojacPostave - 1).toString() + ") = " + i.toString();
-      pocetnaPostava.putIfAbsent(brojacPostave, () => zapis);
+    int zaliha = 0;
+    postavaPocetka = zaliha.toString() + " ≤ nabava(i) ≤ " + _postavaZadatka.max_kapacitet.toString();
+    for (int i = 0; i <= _postavaZadatka.max_kapacitet; i += _postavaZadatka.rata) {
+      String zapis = "I(" + (brojacPostave).toString() + ") = " + i.toString();
+      pocetnaPostava.add(PocetnoStanje(brojac: brojacPostave, nabava: i));
       brojacPostave++;
     }
-    for (double nabava = _postavaZadatka.razdoblja[1]!;
+    for (int nabava = _postavaZadatka.razdoblja[1]!;
         nabava <=
             (_postavaZadatka.razdoblja[1]! + _postavaZadatka.max_kapacitet);
         nabava += _postavaZadatka.rata) {

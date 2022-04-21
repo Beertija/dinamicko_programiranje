@@ -1,5 +1,6 @@
 import 'package:dinamicko_programiranje/helpers/media_query.dart';
 import 'package:dinamicko_programiranje/providers/calculate_provider.dart';
+import 'package:dinamicko_programiranje/screens/early_task_completed_screen.dart';
 import 'package:dinamicko_programiranje/screens/task_completed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,12 +14,12 @@ class UnosVarijabliScreen extends StatefulWidget {
 
 class _UnosVarijabliScreenState extends State<UnosVarijabliScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late double rata;
-  late double max_nabava;
-  late double max_kapacitet;
-  late double trosak_nabave;
-  late double trosak_skladistenja;
-  late Map<int, double> razdoblja;
+  late int rata;
+  late int max_nabava;
+  late int max_kapacitet;
+  late int trosak_nabave;
+  late int trosak_skladistenja;
+  late Map<int, int> razdoblja;
 
   @override
   Widget build(BuildContext context) {
@@ -162,25 +163,25 @@ class _UnosVarijabliScreenState extends State<UnosVarijabliScreen> {
 
   Future<void> openTaskCompletedScreen() async {
     await Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const TaskCompletedScreen()));
+        MaterialPageRoute(builder: (context) => const EarlyTaskCompletedScreen()));
   }
 
   save(String? value, int option) {
     switch (option) {
       case 1:
-        rata = double.parse(value!);
+        rata = int.parse(value!);
         break;
       case 2:
-        max_nabava = double.parse(value!);
+        max_nabava = int.parse(value!);
         break;
       case 3:
-        max_kapacitet = double.parse(value!);
+        max_kapacitet = int.parse(value!);
         break;
       case 4:
-        trosak_nabave = double.parse(value!);
+        trosak_nabave = int.parse(value!);
         break;
       case 5:
-        trosak_skladistenja = double.parse(value!);
+        trosak_skladistenja = int.parse(value!);
         break;
       case 6:
         razdoblja = {};
@@ -188,7 +189,7 @@ class _UnosVarijabliScreenState extends State<UnosVarijabliScreen> {
         int brojac = 1;
         for (String broj in lista) {
           if (broj != "") {
-            razdoblja.putIfAbsent(brojac, () => double.parse(broj));
+            razdoblja.putIfAbsent(brojac, () => int.parse(broj));
             brojac++;
           }
         }

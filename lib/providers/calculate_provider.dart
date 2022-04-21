@@ -87,8 +87,10 @@ class CalculateProvider with ChangeNotifier {
                   (zaliha * _postavaZadatka.trosak_skladistenja))
               .toString();
       privremeniIzracuni.putIfAbsent(brojac, () => izracun);
-      podaciRazdoblja.add(PodaciRazdoblja(f_i: zaliha, q_i: (_postavaZadatka.trosak_nabave +
-          (zaliha * _postavaZadatka.trosak_skladistenja))));
+      podaciRazdoblja.add(PodaciRazdoblja(
+          f_i: zaliha,
+          q_i: (_postavaZadatka.trosak_nabave +
+              (zaliha * _postavaZadatka.trosak_skladistenja))));
       brojac++;
       zaliha += _postavaZadatka.rata;
     }
@@ -97,19 +99,21 @@ class CalculateProvider with ChangeNotifier {
 
   kalkuliranjeTroskaRazdoblja(int razdoblje) {
     //TODO Popraviti ispis metode te način iteriranja kroz razdoblja - big task
-    double zaliha = 0;
-    double nabava = zaliha +
+    int brojac_razdoblja = 0;
+    int zaliha = 0;
+    int nabava = zaliha +
         _postavaZadatka.razdoblja[razdoblje]! -
         _postavaZadatka.max_kapacitet;
+    int max =
+        _postavaZadatka.razdoblja[razdoblje]! + _postavaZadatka.max_kapacitet;
     if (nabava < 0) {
       nabava = 0;
     }
-    for (;
-        nabava <=
-            (_postavaZadatka.razdoblja[razdoblje]! +
-                _postavaZadatka.max_kapacitet);
-        nabava += _postavaZadatka.rata) {
-      String zapis = "[" +
+    if (max > _postavaZadatka.max_nabava) {
+      max = _postavaZadatka.max_nabava;
+    }
+    for (; nabava <= max; nabava += _postavaZadatka.rata) {
+      String zapis = "f(" + brojac_razdoblja.toString() + ")[" +
           nabava.toString() +
           ", " +
           zaliha.toString() +

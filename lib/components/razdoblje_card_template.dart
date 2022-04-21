@@ -1,8 +1,12 @@
+import 'package:dinamicko_programiranje/components/razdoblje_row_template.dart';
 import 'package:dinamicko_programiranje/helpers/media_query.dart';
+import 'package:dinamicko_programiranje/models/podaci_razdoblja.dart';
+import 'package:dinamicko_programiranje/providers/calculate_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class RazdobljeCard extends StatelessWidget {
-  const RazdobljeCard({Key? key, required this.brRazdoblja}) : super(key: key);
+class RazdobljeCardTemplate extends StatelessWidget {
+  const RazdobljeCardTemplate({Key? key, required this.brRazdoblja}) : super(key: key);
   final int brRazdoblja;
 
   @override
@@ -27,35 +31,18 @@ class RazdobljeCard extends StatelessWidget {
               height: displayHeight(context) * 0.04,
               alignment: Alignment.center),
           const SizedBox(height: 10),
-          //TODO napraviti neku mapu koja ce sadrzavati dvije brojke za f(i) i Q(i) te se onda putem .map metode samo generiraju rows sa podacima
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [Text("f(i)", textScaleFactor: 1.2), Text("Q(i)", textScaleFactor: 1.2)],
+            children: const [Text("f(i)", textScaleFactor: 1.2), Text("Q(i)", textScaleFactor: 1.2)],
           ),
           const Divider(indent: 40,
               endIndent: 40,
               thickness: 1,
               height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [Text("20", textScaleFactor: 1.2), Text("400", textScaleFactor: 1.2)],
+          Column(
+            children: Provider.of<CalculateProvider>(context, listen: true).podaciRazdoblja.map((PodaciRazdoblja red) => RazdobljeRowTemplate(podaci: red)).toList()
           ),
-          const Divider(indent: 40,
-              endIndent: 40,
-              thickness: 1,
-              height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [Text("40", textScaleFactor: 1.2), Text("440", textScaleFactor: 1.2)],
-          ),
-          const Divider(indent: 40,
-              endIndent: 40,
-              thickness: 1,
-              height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [Text("60", textScaleFactor: 1.2), Text("480", textScaleFactor: 1.2)],
-          )
+          const SizedBox(height: 10)
         ],
       ),
     );

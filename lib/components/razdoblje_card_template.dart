@@ -35,10 +35,6 @@ class RazdobljeCardTemplate extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: const [Text("f(i)", textScaleFactor: 1.2), Text("Q(i)", textScaleFactor: 1.2)],
           ),
-          const Divider(indent: 40,
-              endIndent: 40,
-              thickness: 1,
-              height: 8),
           Column(
             children: Provider.of<CalculateProvider>(context, listen: true).podaciRazdoblja.map((PodaciRazdoblja red) => RazdobljeRowTemplate(podaci: red)).toList()
           ),

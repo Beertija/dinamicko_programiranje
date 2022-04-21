@@ -34,33 +34,35 @@ class _TaskCompletedScreenState extends State<TaskCompletedScreen> {
             title: const Text("Problem nabave",
                 style: TextStyle(color: Colors.white)),
           ),
-          body: Column(
-            children: const [
-              RazdobljeCardTemplate(brRazdoblja: 1)
-              // Expanded(
-              //     flex: 1,
-              //     child: ListView.builder(
-              //         itemCount:
-              //             Provider.of<CalculateProvider>(context, listen: true)
-              //                 .privremeniIzracuni
-              //                 .length,
-              //         itemBuilder: (context, index) {
-              //           int key = Provider.of<CalculateProvider>(context,
-              //                   listen: true)
-              //               .privremeniIzracuni
-              //               .keys
-              //               .elementAt(index);
-              //           return Row(
-              //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //             children: [
-              //               Text(Provider.of<CalculateProvider>(context,
-              //                       listen: true)
-              //                   .privremeniIzracuni[key]!),
-              //             ],
-              //           );
-              //           // return Card(myDevice: PointsCalculator.Games[key]!);
-              //         })),
-            ],
+          body: SingleChildScrollView(
+            child: Column(
+              children: const [
+                RazdobljeCardTemplate(brRazdoblja: 1)
+                // Expanded(
+                //     flex: 1,
+                //     child: ListView.builder(
+                //         itemCount:
+                //             Provider.of<CalculateProvider>(context, listen: true)
+                //                 .privremeniIzracuni
+                //                 .length,
+                //         itemBuilder: (context, index) {
+                //           int key = Provider.of<CalculateProvider>(context,
+                //                   listen: true)
+                //               .privremeniIzracuni
+                //               .keys
+                //               .elementAt(index);
+                //           return Row(
+                //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //             children: [
+                //               Text(Provider.of<CalculateProvider>(context,
+                //                       listen: true)
+                //                   .privremeniIzracuni[key]!),
+                //             ],
+                //           );
+                //           // return Card(myDevice: PointsCalculator.Games[key]!);
+                //         })),
+              ],
+            ),
           ),
         ));
   }

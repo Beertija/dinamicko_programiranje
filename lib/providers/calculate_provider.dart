@@ -1,13 +1,13 @@
 import 'package:dinamicko_programiranje/models/pocetno_stanje.dart';
+import 'package:dinamicko_programiranje/models/podaci_razdoblja.dart';
 import 'package:dinamicko_programiranje/models/postava_zadatka.dart';
 import 'package:flutter/material.dart';
 
 class CalculateProvider with ChangeNotifier {
   Map<int, String> privremeniIzracuni = {};
   List<PocetnoStanje> pocetnaPostava = [];
+  List<PodaciRazdoblja> podaciRazdoblja = [];
   String postavaPocetka = "";
-  Map<int, int> f_i = {};
-  Map<int, int> q_i = {};
   int brojac = 1;
   int brojacPostave = 1;
 
@@ -30,21 +30,15 @@ class CalculateProvider with ChangeNotifier {
         trosak_skladistenja: 0,
         razdoblja: {});
     privremeniIzracuni = {};
+    podaciRazdoblja = [];
     pocetnaPostava = [];
     postavaPocetka = "";
-    f_i = {};
-    q_i = {};
     brojac = 1;
     brojacPostave = 1;
   }
 
-  void setup(
-      int rata,
-      int max_nabava,
-      int max_kapacitet,
-      int trosak_nabave,
-      int trosak_skladistenja,
-      Map<int, int> razdoblja) {
+  void setup(int rata, int max_nabava, int max_kapacitet, int trosak_nabave,
+      int trosak_skladistenja, Map<int, int> razdoblja) {
     _postavaZadatka = PostavaZadatka(
         rata: rata,
         max_nabava: max_nabava,
@@ -58,15 +52,22 @@ class CalculateProvider with ChangeNotifier {
     // }
   }
 
-  void kalkuliranjePocetnogTroska() {
-    //TODO razdvojiti prvi dio od prvog razdoblja u zasebne metode i napraviti zasebnu karticu za prikaz posto nema postupaka
+  int racunanjePostaveZadatka() {
     int zaliha = 0;
-    postavaPocetka = zaliha.toString() + " ≤ nabava(i) ≤ " + _postavaZadatka.max_kapacitet.toString();
-    for (int i = 0; i <= _postavaZadatka.max_kapacitet; i += _postavaZadatka.rata) {
-      String zapis = "I(" + (brojacPostave).toString() + ") = " + i.toString();
+    postavaPocetka = zaliha.toString() +
+        " ≤ nabava(i) ≤ " +
+        _postavaZadatka.max_kapacitet.toString();
+    for (int i = 0;
+        i <= _postavaZadatka.max_kapacitet;
+        i += _postavaZadatka.rata) {
       pocetnaPostava.add(PocetnoStanje(brojac: brojacPostave, nabava: i));
       brojacPostave++;
     }
+    return zaliha;
+  }
+
+  void kalkuliranjePocetnogTroska() {
+    int zaliha = racunanjePostaveZadatka();
     for (int nabava = _postavaZadatka.razdoblja[1]!;
         nabava <=
             (_postavaZadatka.razdoblja[1]! + _postavaZadatka.max_kapacitet);
@@ -86,9 +87,8 @@ class CalculateProvider with ChangeNotifier {
                   (zaliha * _postavaZadatka.trosak_skladistenja))
               .toString();
       privremeniIzracuni.putIfAbsent(brojac, () => izracun);
-      f_i.putIfAbsent(brojac, () => zaliha.toInt());
-      q_i.putIfAbsent(brojac, () => (_postavaZadatka.trosak_nabave +
-          (zaliha * _postavaZadatka.trosak_skladistenja)).toInt());
+      podaciRazdoblja.add(PodaciRazdoblja(f_i: zaliha, q_i: (_postavaZadatka.trosak_nabave +
+          (zaliha * _postavaZadatka.trosak_skladistenja))));
       brojac++;
       zaliha += _postavaZadatka.rata;
     }
@@ -98,13 +98,17 @@ class CalculateProvider with ChangeNotifier {
   kalkuliranjeTroskaRazdoblja(int razdoblje) {
     //TODO Popraviti ispis metode te način iteriranja kroz razdoblja - big task
     double zaliha = 0;
-    double nabava = zaliha + _postavaZadatka.razdoblja[razdoblje]! - _postavaZadatka.max_kapacitet;
+    double nabava = zaliha +
+        _postavaZadatka.razdoblja[razdoblje]! -
+        _postavaZadatka.max_kapacitet;
     if (nabava < 0) {
       nabava = 0;
     }
     for (;
-    nabava <= (_postavaZadatka.razdoblja[razdoblje]! + _postavaZadatka.max_kapacitet);
-    nabava += _postavaZadatka.rata) {
+        nabava <=
+            (_postavaZadatka.razdoblja[razdoblje]! +
+                _postavaZadatka.max_kapacitet);
+        nabava += _postavaZadatka.rata) {
       String zapis = "[" +
           nabava.toString() +
           ", " +
@@ -120,7 +124,9 @@ class CalculateProvider with ChangeNotifier {
           " + " +
           (zaliha * _postavaZadatka.trosak_skladistenja).toString() +
           " = " +
-          (_postavaZadatka.trosak_nabave + (zaliha * _postavaZadatka.trosak_skladistenja)).toString();
+          (_postavaZadatka.trosak_nabave +
+                  (zaliha * _postavaZadatka.trosak_skladistenja))
+              .toString();
       privremeniIzracuni.putIfAbsent(brojac, () => zapis);
       brojac++;
       zaliha += _postavaZadatka.rata;

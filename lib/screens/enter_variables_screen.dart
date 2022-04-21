@@ -1,6 +1,5 @@
 import 'package:dinamicko_programiranje/helpers/media_query.dart';
 import 'package:dinamicko_programiranje/providers/calculate_provider.dart';
-import 'package:dinamicko_programiranje/screens/early_task_completed_screen.dart';
 import 'package:dinamicko_programiranje/screens/task_completed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -163,7 +162,7 @@ class _UnosVarijabliScreenState extends State<UnosVarijabliScreen> {
 
   Future<void> openTaskCompletedScreen() async {
     await Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const EarlyTaskCompletedScreen()));
+        MaterialPageRoute(builder: (context) => const TaskCompletedScreen()));
   }
 
   save(String? value, int option) {

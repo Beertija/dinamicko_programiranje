@@ -1,5 +1,4 @@
 import 'package:dinamicko_programiranje/components/razdoblje_card_template.dart';
-import 'package:dinamicko_programiranje/helpers/media_query.dart';
 import 'package:dinamicko_programiranje/providers/calculate_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,32 +35,8 @@ class _TaskCompletedScreenState extends State<TaskCompletedScreen> {
                 style: TextStyle(color: Colors.white)),
           ),
           body: Column(
-            children: [
-              // Expanded( //TODO separate this to a new screen
-              //     child: ListView.builder(
-              //     itemCount:
-              //     Provider.of<CalculateProvider>(context, listen: true)
-              //         .pocetnaPostava
-              //         .length,
-              //     itemBuilder: (context, index) {
-              //       int key = Provider.of<CalculateProvider>(context,
-              //           listen: true)
-              //           .pocetnaPostava
-              //           .keys
-              //           .elementAt(index);
-              //       return Row(
-              //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //         children: [
-              //           Text(Provider.of<CalculateProvider>(context,
-              //               listen: true)
-              //               .pocetnaPostava[key]!),
-              //         ],
-              //       );
-              //       // return Card(myDevice: PointsCalculator.Games[key]!);
-              //     })),
-              Expanded(
-                  flex: 9,
-                  child: RazdobljeCard(brRazdoblja: 1)),
+            children: const [
+              RazdobljeCardTemplate(brRazdoblja: 1)
               // Expanded(
               //     flex: 1,
               //     child: ListView.builder(

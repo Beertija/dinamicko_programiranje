@@ -37,7 +37,8 @@ class _TaskCompletedScreenState extends State<TaskCompletedScreen> {
           body: SingleChildScrollView(
             child: Column(
               children: const [
-                RazdobljeCardTemplate(brRazdoblja: 1)
+                //TODO napraviti kreiranje kartica s obzirom na kolicinu perioda
+                RazdobljeCardTemplate(brRazdoblja: 1) //TODO proslijediti cijelu listu podataka razdoblja
                 // Expanded(
                 //     flex: 1,
                 //     child: ListView.builder(

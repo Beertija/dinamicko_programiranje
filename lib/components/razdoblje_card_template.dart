@@ -33,7 +33,7 @@ class RazdobljeCardTemplate extends StatelessWidget {
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: const [Text("f(i)", textScaleFactor: 1.2), Text("Q(i)", textScaleFactor: 1.2)],
+            children: const [Text("Q(i)", textScaleFactor: 1.2), Text("f(i)", textScaleFactor: 1.2)],
           ),
           Column(
             children: Provider.of<CalculateProvider>(context, listen: true).podaciRazdoblja.map((PodaciRazdoblja red) => RazdobljeRowTemplate(podaci: red)).toList()

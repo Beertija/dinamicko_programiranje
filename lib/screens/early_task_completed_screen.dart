@@ -53,12 +53,12 @@ class _EarlyTaskCompletedScreenState extends State<EarlyTaskCompletedScreen> {
                           label: Text("Mogućnosti", textScaleFactor: 1.1),
                           numeric: true),
                       DataColumn(
-                          label: Text("Količina nabave", textScaleFactor: 1.1),
+                          label: Text("Količina nabave I(i)", textScaleFactor: 1.1),
                           numeric: true),
                     ],
                     rows: getRows(
                         Provider.of<CalculateProvider>(context, listen: true)
-                            .pocetnaPostava),
+                            .pocetnaPostavaTablice),
                   ),
                 ],
               ),

@@ -1,6 +1,7 @@
 import 'package:dinamicko_programiranje/components/razdoblje_card_template.dart';
 import 'package:dinamicko_programiranje/models/podaci_razdoblja.dart';
 import 'package:dinamicko_programiranje/providers/calculate_provider.dart';
+import 'package:dinamicko_programiranje/screens/early_task_completed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,40 +23,28 @@ class _TaskCompletedScreenState extends State<TaskCompletedScreen> {
         },
         child: Scaffold(
           appBar: AppBar(
-            leading: GestureDetector(
-                onTap: () {
-                  Provider.of<CalculateProvider>(context, listen: false)
-                      .reset();
-                  Navigator.pop(context);
-                },
-                child: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                )),
             title: const Text("Problem nabave",
                 style: TextStyle(color: Colors.white)),
           ),
           drawer: Drawer(
-            // Add a ListView to the drawer. This ensures the user can scroll
-            // through the options in the drawer if there isn't enough vertical
-            // space to fit everything.
             child: ListView(
-              // Important: Remove any padding from the ListView.
               padding: EdgeInsets.zero,
               children: [
                 const DrawerHeader(
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: Colors.orange,
                   ),
-                  child: Text('Drawer Header'),
+                  child: Center(child: Text('Aplikacija za kolegij Operacijska Istraživanja 2',
+                      textScaleFactor: 1.3,
+                      style: TextStyle(color: Colors.white))),
                 ),
                 ListTile(
-                  title: const Text('Item 1'),
+                  title: const Text('Raspisivanje početnog stanja'),
                   onTap: () {
-                    // Update the state of the app
-                    // ...
-                    // Then close the drawer
                     Navigator.pop(context);
+                    Navigator.pop(context);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const EarlyTaskCompletedScreen()));
                   },
                 ),
                 ListTile(

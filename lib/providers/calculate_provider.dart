@@ -145,12 +145,12 @@ class CalculateProvider with ChangeNotifier {
               " ≤ nabava(i) ≤ " +
               maxNarudzba.toString());
       //endregion
-      List<PodaciRazdoblja> a =
-          izracuniPoRazdobljima[br - 1] as List<PodaciRazdoblja>;
-      int brojacRedaka = 0;
+      var listaPrethodnih = izracuniPoRazdobljima.values.toList();
+      List<PodaciRazdoblja> a = listaPrethodnih[br - 2];
+      int t = 0;
       for (int z = naSkladistu;
           z <= maxNarudzba;
-          z += _postavaZadatka.rata, brojacRedaka++) {
+          z += _postavaZadatka.rata, t++) {
         if (z == 0) {
           narucivanje = 0;
         } else {
@@ -161,7 +161,9 @@ class CalculateProvider with ChangeNotifier {
         } else {
           skladistenje = i * _postavaZadatka.trosak_skladistenja;
         }
-        skladistenjeProslo = a[brojacRedaka].f_i;
+        //TODO fix uzimanje proslog razdoblja
+        int rezzProslogRazdoblja = (i + _postavaZadatka.razdoblja[br]! - z) ~/ _postavaZadatka.rata;
+        skladistenjeProslo = a[rezzProslogRazdoblja].f_i;
         zbroj = narucivanje + skladistenje + skladistenjeProslo;
         if (min <= 0) {
           min = zbroj;
@@ -192,11 +194,15 @@ class CalculateProvider with ChangeNotifier {
             skladistenjeProslo.toString() +
             " = " +
             zbroj.toString();
-        ispisProblema.putIfAbsent(brojacRedaka, () => ispis);
+        ispisProblema.putIfAbsent(t, () => ispis);
       }
-      brojacRedaka++;
-      String rjesenje = "f(" + br.toString() + ")[" + i.toString() + "] = min -> " + min.toString();
-      ispisProblema.putIfAbsent(brojacRedaka, () => rjesenje);
+      String rjesenje = "f(" +
+          br.toString() +
+          ")[" +
+          i.toString() +
+          "] = min -> " +
+          min.toString();
+      ispisProblema.putIfAbsent(t, () => rjesenje);
       podaciRazdobljaZaSveDruge.add(PodaciRazdoblja(q_i: q, f_i: min));
     }
     izracuniPoRazdobljima.putIfAbsent(br, () => podaciRazdobljaZaSveDruge);

@@ -1,4 +1,5 @@
 import 'package:dinamicko_programiranje/components/razdoblje_card_template.dart';
+import 'package:dinamicko_programiranje/models/podaci_razdoblja.dart';
 import 'package:dinamicko_programiranje/providers/calculate_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,37 +35,54 @@ class _TaskCompletedScreenState extends State<TaskCompletedScreen> {
             title: const Text("Problem nabave",
                 style: TextStyle(color: Colors.white)),
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: const [
-                //TODO napraviti kreiranje kartica s obzirom na kolicinu perioda
-                RazdobljeCardTemplate(brRazdoblja: 1) //TODO proslijediti cijelu listu podataka razdoblja
-                // Expanded(
-                //     flex: 1,
-                //     child: ListView.builder(
-                //         itemCount:
-                //             Provider.of<CalculateProvider>(context, listen: true)
-                //                 .privremeniIzracuni
-                //                 .length,
-                //         itemBuilder: (context, index) {
-                //           int key = Provider.of<CalculateProvider>(context,
-                //                   listen: true)
-                //               .privremeniIzracuni
-                //               .keys
-                //               .elementAt(index);
-                //           return Row(
-                //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //             children: [
-                //               Text(Provider.of<CalculateProvider>(context,
-                //                       listen: true)
-                //                   .privremeniIzracuni[key]!),
-                //             ],
-                //           );
-                //           // return Card(myDevice: PointsCalculator.Games[key]!);
-                //         })),
+          drawer: Drawer(
+            // Add a ListView to the drawer. This ensures the user can scroll
+            // through the options in the drawer if there isn't enough vertical
+            // space to fit everything.
+            child: ListView(
+              // Important: Remove any padding from the ListView.
+              padding: EdgeInsets.zero,
+              children: [
+                const DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                  child: Text('Drawer Header'),
+                ),
+                ListTile(
+                  title: const Text('Item 1'),
+                  onTap: () {
+                    // Update the state of the app
+                    // ...
+                    // Then close the drawer
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: const Text('Item 2'),
+                  onTap: () {
+                    // Update the state of the app
+                    // ...
+                    // Then close the drawer
+                    Navigator.pop(context);
+                  },
+                ),
               ],
             ),
           ),
+          body: ListView.builder(
+              itemCount: Provider.of<CalculateProvider>(context, listen: true)
+                  .izracuniPoRazdobljima
+                  .length,
+              itemBuilder: (context, index) {
+                List<List<PodaciRazdoblja>> liste =
+                    Provider.of<CalculateProvider>(context, listen: true)
+                        .izracuniPoRazdobljima
+                        .values
+                        .toList();
+                return RazdobljeCardTemplate(
+                    brRazdoblja: index + 1, podaciRazdoblja: liste[index]);
+              }),
         ));
   }
 }

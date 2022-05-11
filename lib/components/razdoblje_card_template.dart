@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class RazdobljeCardTemplate extends StatelessWidget {
-  const RazdobljeCardTemplate({Key? key, required this.brRazdoblja}) : super(key: key);
+  const RazdobljeCardTemplate({Key? key, required this.brRazdoblja, required this.podaciRazdoblja}) : super(key: key);
   final int brRazdoblja;
+  final List<PodaciRazdoblja> podaciRazdoblja;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class RazdobljeCardTemplate extends StatelessWidget {
             children: const [Text("Q(i)", textScaleFactor: 1.2), Text("f(i)", textScaleFactor: 1.2)],
           ),
           Column(
-            children: Provider.of<CalculateProvider>(context, listen: true).podaciRazdoblja.map((PodaciRazdoblja red) => RazdobljeRowTemplate(podaci: red)).toList()
+            children: podaciRazdoblja.map((PodaciRazdoblja red) => RazdobljeRowTemplate(podaci: red)).toList()
           ),
           const SizedBox(height: 10)
         ],

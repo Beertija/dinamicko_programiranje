@@ -1,3 +1,4 @@
+import 'package:dinamicko_programiranje/models/finalno_stanje.dart';
 import 'package:dinamicko_programiranje/models/pocetno_stanje.dart';
 import 'package:dinamicko_programiranje/models/podaci_razdoblja.dart';
 import 'package:dinamicko_programiranje/models/postava_zadatka.dart';
@@ -6,11 +7,11 @@ import 'package:flutter/material.dart';
 class CalculateProvider with ChangeNotifier {
   List<PocetnoStanje> pocetnaPostavaTablice = [];
   List<PodaciRazdoblja> podaciRazdoblja = [];
+  List<FinalnoStanje> podaciFinalnogRacuna = [];
   Map<int, List<PodaciRazdoblja>> izracuniPoRazdobljima = {};
-
-  Map<int, int> izracuni = {};
   String postavaPocetka = "";
   int brojacPostave = 1;
+  int ukupno = 0;
 
   PostavaZadatka _postavaZadatka = PostavaZadatka(
       rata: 0,
@@ -32,11 +33,11 @@ class CalculateProvider with ChangeNotifier {
         razdoblja: {});
     pocetnaPostavaTablice = [];
     podaciRazdoblja = [];
+    podaciFinalnogRacuna = [];
     izracuniPoRazdobljima = {};
-
-    izracuni = {};
     postavaPocetka = "";
     brojacPostave = 1;
+    ukupno = 0;
   }
 
   void setup(int rata, int max_nabava, int max_kapacitet, int trosak_nabave,
@@ -52,6 +53,7 @@ class CalculateProvider with ChangeNotifier {
     for (int br = 2; br <= _postavaZadatka.razdoblja.length; br++) {
       kalkuliranjeTroskaRazdoblja(br);
     }
+    kalkuliranjeFinalnogRjesenja();
   }
 
   void kalkuliranjePocetnogTroska() {
@@ -161,8 +163,8 @@ class CalculateProvider with ChangeNotifier {
         } else {
           skladistenje = i * _postavaZadatka.trosak_skladistenja;
         }
-        //TODO fix uzimanje proslog razdoblja
-        int rezzProslogRazdoblja = (i + _postavaZadatka.razdoblja[br]! - z) ~/ _postavaZadatka.rata;
+        int rezzProslogRazdoblja =
+            (i + _postavaZadatka.razdoblja[br]! - z) ~/ _postavaZadatka.rata;
         skladistenjeProslo = a[rezzProslogRazdoblja].f_i;
         zbroj = narucivanje + skladistenje + skladistenjeProslo;
         if (min <= 0) {
@@ -208,134 +210,61 @@ class CalculateProvider with ChangeNotifier {
     izracuniPoRazdobljima.putIfAbsent(br, () => podaciRazdobljaZaSveDruge);
   }
 
-//
-// int racunanjePostaveZadatka() {
-//   int zaliha = 0;
-//   postavaPocetka = zaliha.toString() +
-//       " ≤ nabava(i) ≤ " +
-//       _postavaZadatka.max_kapacitet.toString();
-//   for (int i = 0;
-//       i <= _postavaZadatka.max_kapacitet;
-//       i += _postavaZadatka.rata) {
-//     pocetnaPostava.add(PocetnoStanje(brojac: brojacPostave, nabava: i));
-//     brojacPostave++;
-//     brojacFormula++;
-//   }
-//   return zaliha;
-// }
-//
-// void kalkuliranjePocetnogTroska() {
-//   int zaliha = racunanjePostaveZadatka();
-//   for (int nabava = _postavaZadatka.razdoblja[1]!;
-//       nabava <=
-//           (_postavaZadatka.razdoblja[1]! + _postavaZadatka.max_kapacitet);
-//       nabava += _postavaZadatka.rata) {
-//     String izracun = "f(1)[" +
-//         zaliha.toString() +
-//         "] = [" +
-//         nabava.toString() +
-//         ", " +
-//         zaliha.toString() +
-//         "] = " +
-//         _postavaZadatka.trosak_nabave.toString() +
-//         " + " +
-//         (zaliha * _postavaZadatka.trosak_skladistenja).toString() +
-//         " = " +
-//         (_postavaZadatka.trosak_nabave +
-//                 (zaliha * _postavaZadatka.trosak_skladistenja))
-//             .toString();
-//     privremeniIzracuni.putIfAbsent(brojac, () => izracun);
-//     izracuni.putIfAbsent(
-//         brojac,
-//         () =>
-//             _postavaZadatka.trosak_nabave +
-//             (zaliha * _postavaZadatka.trosak_skladistenja));
-//     podaciRazdoblja.add(PodaciRazdoblja(
-//         q_i: zaliha,
-//         f_i: (_postavaZadatka.trosak_nabave +
-//             (zaliha * _postavaZadatka.trosak_skladistenja))));
-//     brojac++;
-//     zaliha += _postavaZadatka.rata;
-//   }
-//   notifyListeners();
-// }
-//
-// void izracunRetka(int razdoblje) {
-//   //region postavljanje nabave
-//   int zaliha = 0;
-//   int nabava = zaliha +
-//       _postavaZadatka.razdoblja[razdoblje]! -
-//       _postavaZadatka.max_kapacitet;
-//   int max = zaliha + _postavaZadatka.razdoblja[razdoblje]!;
-//   if (nabava < 0) {
-//     nabava = 0;
-//   }
-//   while (max > _postavaZadatka.max_nabava) {
-//     max -= _postavaZadatka.rata;
-//   }
-//   //ispis dio
-//
-//   //endregion
-// }
-//
-// kalkuliranjeTroskaRazdoblja(int razdoblje) {
-//   //region Razdoblje
-//   for (int i = 1; i < brojac; i++) {
-//     izracunRetka(razdoblje);
-//   }
-//
-//   //endregion
-//
-//   //TODO Popraviti ispis metode te način iteriranja kroz razdoblja - big task
-//   int zaliha = 0;
-//   int nabava = zaliha +
-//       _postavaZadatka.razdoblja[razdoblje]! -
-//       _postavaZadatka.max_kapacitet;
-//   int max =
-//       _postavaZadatka.razdoblja[razdoblje]! + _postavaZadatka.max_kapacitet;
-//   if (nabava < 0) {
-//     nabava = 0;
-//   }
-//   if (max > _postavaZadatka.max_nabava) {
-//     max = _postavaZadatka.max_nabava;
-//   }
-//   for (; nabava <= max; nabava += _postavaZadatka.rata) {
-//     String zapis = "g[" +
-//         nabava.toString() +
-//         ", " +
-//         zaliha.toString() +
-//         "] + f(" +
-//         (razdoblje - 1).toString() +
-//         ")[" +
-//         zaliha.toString() +
-//         " + " +
-//         _postavaZadatka.razdoblja[razdoblje]!.toString() +
-//         " - " +
-//         nabava.toString() +
-//         "] = ";
-//     if (nabava == 0) {
-//       zapis += "0";
-//     } else {
-//       zapis += _postavaZadatka.trosak_nabave.toString();
-//     }
-//     zapis += " + ";
-//     if (zaliha == 0) {
-//       zapis += "0";
-//     } else {
-//       zapis += (zaliha * _postavaZadatka.trosak_skladistenja).toString();
-//     }
-//     zapis += " + ";
-//     brojac++;
-//     zapis += izracuni[brojac - (brojacFormula * (razdoblje - 1))].toString();
-//     zapis += " = " +
-//         (_postavaZadatka.trosak_nabave +
-//                 (zaliha * _postavaZadatka.trosak_skladistenja) +
-//                 izracuni[brojac - (brojacFormula * (razdoblje - 1))]!)
-//             .toString();
-//     String zapis_final =
-//         "f(" + razdoblje.toString() + ")[" + nabava.toString() + "] = min";
-//     privremeniIzracuni.putIfAbsent(--brojac, () => zapis);
-//     zaliha += _postavaZadatka.rata;
-//   }
-// }
+  void kalkuliranjeFinalnogRjesenja() {
+    //prvi korak
+    int iSada = 0;
+    int d = _postavaZadatka.razdoblja[_postavaZadatka.razdoblja.length]!;
+    var listaPrethodnih = izracuniPoRazdobljima.values.toList();
+    List<PodaciRazdoblja> razdoblje = listaPrethodnih[_postavaZadatka.razdoblja.length - 1];
+    int rezzProslogRazdoblja = iSada ~/ _postavaZadatka.rata;
+    int q = razdoblje[rezzProslogRazdoblja].q_i;
+    int iProslo = d + iSada - q;
+    int cP = 0;
+    int cH = 0;
+    if (q != 0) {
+      cP = _postavaZadatka.trosak_nabave;
+    }
+    if (iSada != 0) {
+      cH = iSada * _postavaZadatka.trosak_skladistenja;
+    }
+    FinalnoStanje finalnoStanje = FinalnoStanje(
+        razdoblje: _postavaZadatka.razdoblja.length,
+        iProslo: iProslo,
+        q: q,
+        d: d,
+        iSada: iSada,
+        cP: cP,
+        cH: cH);
+    podaciFinalnogRacuna.add(finalnoStanje);
+    ukupno += cH + cP;
+    for (int i = _postavaZadatka.razdoblja.length - 1; i > 0; i--) {
+      int brRazdoblja = i;
+      iSada = podaciFinalnogRacuna[podaciFinalnogRacuna.length - 1].iProslo;
+      d = _postavaZadatka.razdoblja[i]!;
+      razdoblje = listaPrethodnih[i - 1];
+      rezzProslogRazdoblja = iSada ~/ _postavaZadatka.rata;
+      q = razdoblje[rezzProslogRazdoblja].q_i;
+      iProslo = d + iSada - q;
+      cP = 0;
+      cH = 0;
+      if (q != 0) {
+        cP = _postavaZadatka.trosak_nabave;
+      }
+      if (iSada != 0) {
+        cH = iSada * _postavaZadatka.trosak_skladistenja;
+      }
+      finalnoStanje = FinalnoStanje(
+          razdoblje: brRazdoblja,
+          iProslo: iProslo,
+          q: q,
+          d: d,
+          iSada: iSada,
+          cP: cP,
+          cH: cH);
+      podaciFinalnogRacuna.add(finalnoStanje);
+      ukupno += cH + cP;
+    }
+    podaciFinalnogRacuna = podaciFinalnogRacuna.reversed.toList();
+    notifyListeners();
+  }
 }

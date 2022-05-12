@@ -1,20 +1,22 @@
 import 'package:dinamicko_programiranje/helpers/utils.dart';
+import 'package:dinamicko_programiranje/models/finalno_stanje.dart';
 import 'package:dinamicko_programiranje/models/pocetno_stanje.dart';
-import 'package:dinamicko_programiranje/screens/final_task_completed_screen.dart';
+import 'package:dinamicko_programiranje/screens/early_task_completed_screen.dart';
 import 'package:dinamicko_programiranje/screens/task_completed_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dinamicko_programiranje/providers/calculate_provider.dart';
 
-class EarlyTaskCompletedScreen extends StatefulWidget {
-  const EarlyTaskCompletedScreen({Key? key}) : super(key: key);
+class FinalTaskCompletedScreen extends StatefulWidget {
+  const FinalTaskCompletedScreen({Key? key}) : super(key: key);
 
   @override
-  State<EarlyTaskCompletedScreen> createState() =>
-      _EarlyTaskCompletedScreenState();
+  State<FinalTaskCompletedScreen> createState() =>
+      _FinalTaskCompletedScreenState();
 }
 
-class _EarlyTaskCompletedScreenState extends State<EarlyTaskCompletedScreen> {
+class _FinalTaskCompletedScreenState extends State<FinalTaskCompletedScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -26,7 +28,7 @@ class _EarlyTaskCompletedScreenState extends State<EarlyTaskCompletedScreen> {
       },
       child: Scaffold(
           appBar: AppBar(
-            title: const Text("Raspisivanje početnog stanja",
+            title: const Text("Završna tablica",
                 style: TextStyle(color: Colors.white)),
           ),
           drawer: Drawer(
@@ -45,6 +47,9 @@ class _EarlyTaskCompletedScreenState extends State<EarlyTaskCompletedScreen> {
                   title: const Text('Raspisivanje početnog stanja'),
                   onTap: () {
                     Navigator.pop(context);
+                    Navigator.pop(context);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const EarlyTaskCompletedScreen()));
                   },
                 ),
                 ListTile(
@@ -60,9 +65,6 @@ class _EarlyTaskCompletedScreenState extends State<EarlyTaskCompletedScreen> {
                   title: const Text('Završna tablica'),
                   onTap: () {
                     Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const FinalTaskCompletedScreen()));
                   },
                 ),
               ],
@@ -74,22 +76,40 @@ class _EarlyTaskCompletedScreenState extends State<EarlyTaskCompletedScreen> {
               width: double.infinity,
               child: Column(
                 children: [
-                  Text(
+                  Text("Ukupan iznos: " +
                       Provider.of<CalculateProvider>(context, listen: true)
-                          .postavaPocetka,
+                          .ukupno.toString(),
                       textScaleFactor: 1.4),
-                  DataTable(
-                    columns: const [
-                      DataColumn(
-                          label: Text("Mogućnosti", textScaleFactor: 1.1),
-                          numeric: true),
-                      DataColumn(
-                          label: Text("Količina nabave I(i)", textScaleFactor: 1.1),
-                          numeric: true),
-                    ],
-                    rows: getRows(
-                        Provider.of<CalculateProvider>(context, listen: true)
-                            .pocetnaPostavaTablice),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      columns: const [
+                        DataColumn(
+                            label: Text("Razdoblje", textScaleFactor: 1.1),
+                            numeric: true),
+                        DataColumn(
+                            label: Text("I(i-1)", textScaleFactor: 1.1),
+                            numeric: true),
+                        DataColumn(
+                            label: Text("Q(i)", textScaleFactor: 1.1),
+                            numeric: true),
+                        DataColumn(
+                            label: Text("D(i)", textScaleFactor: 1.1),
+                            numeric: true),
+                        DataColumn(
+                            label: Text("I(i)", textScaleFactor: 1.1),
+                            numeric: true),
+                        DataColumn(
+                            label: Text("Cp(i)", textScaleFactor: 1.1),
+                            numeric: true),
+                        DataColumn(
+                            label: Text("Ch(i)", textScaleFactor: 1.1),
+                            numeric: true),
+                      ],
+                      rows: getRows(
+                          Provider.of<CalculateProvider>(context, listen: true)
+                              .podaciFinalnogRacuna),
+                    ),
                   ),
                 ],
               ),
@@ -98,12 +118,12 @@ class _EarlyTaskCompletedScreenState extends State<EarlyTaskCompletedScreen> {
     );
   }
 
-  getRows(List<PocetnoStanje> pocetnaPostava) =>
-      pocetnaPostava.map((PocetnoStanje red) {
-        final cells = [red.brojac, red.nabava];
+  getRows(List<FinalnoStanje> pocetnaPostava) =>
+      pocetnaPostava.map((FinalnoStanje red) {
+        final cells = [red.razdoblje, red.iProslo, red.q, red.d, red.iSada, red.cP, red.cH];
         return DataRow(
             cells: Utils.modelBuilder(cells, (index, cell) {
-          return DataCell(Text('$cell', textScaleFactor: 1.2));
-        }));
+              return DataCell(Text('$cell', textScaleFactor: 1.2));
+            }));
       }).toList();
 }

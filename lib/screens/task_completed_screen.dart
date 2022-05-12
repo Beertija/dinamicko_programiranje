@@ -2,6 +2,7 @@ import 'package:dinamicko_programiranje/components/razdoblje_card_template.dart'
 import 'package:dinamicko_programiranje/models/podaci_razdoblja.dart';
 import 'package:dinamicko_programiranje/providers/calculate_provider.dart';
 import 'package:dinamicko_programiranje/screens/early_task_completed_screen.dart';
+import 'package:dinamicko_programiranje/screens/final_task_completed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +24,7 @@ class _TaskCompletedScreenState extends State<TaskCompletedScreen> {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: const Text("Problem nabave",
+            title: const Text("Izračuni po razdobljima",
                 style: TextStyle(color: Colors.white)),
           ),
           drawer: Drawer(
@@ -48,12 +49,18 @@ class _TaskCompletedScreenState extends State<TaskCompletedScreen> {
                   },
                 ),
                 ListTile(
-                  title: const Text('Item 2'),
+                  title: const Text('Izračuni po razdobljima'),
                   onTap: () {
-                    // Update the state of the app
-                    // ...
-                    // Then close the drawer
                     Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: const Text('Završna tablica'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const FinalTaskCompletedScreen()));
                   },
                 ),
               ],

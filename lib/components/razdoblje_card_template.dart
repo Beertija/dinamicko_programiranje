@@ -13,8 +13,7 @@ class RazdobljeCardTemplate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin:
-      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      margin: orientationMode(context) ? const EdgeInsets.symmetric(vertical: 8, horizontal: 16) : const EdgeInsets.symmetric(vertical: 8, horizontal: 180),
       elevation: 6,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -29,7 +28,7 @@ class RazdobljeCardTemplate extends StatelessWidget {
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20))),
-              height: displayHeight(context) * 0.04,
+              height: orientationMode(context) ? displayHeight(context) * 0.04 : displayHeight(context) * 0.08,
               alignment: Alignment.center),
           const SizedBox(height: 10),
           Row(

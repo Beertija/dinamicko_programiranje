@@ -9,6 +9,7 @@ class CalculateProvider with ChangeNotifier {
   List<PodaciRazdoblja> podaciRazdoblja = [];
   List<FinalnoStanje> podaciFinalnogRacuna = [];
   Map<int, List<PodaciRazdoblja>> izracuniPoRazdobljima = {};
+  Map<int, List<String>> ispisProblemaPoRazdobljima = {};
   String postavaPocetka = "";
   int brojacPostave = 1;
   int ukupno = 0;
@@ -35,6 +36,7 @@ class CalculateProvider with ChangeNotifier {
     podaciRazdoblja = [];
     podaciFinalnogRacuna = [];
     izracuniPoRazdobljima = {};
+    ispisProblemaPoRazdobljima = {};
     postavaPocetka = "";
     brojacPostave = 1;
     ukupno = 0;
@@ -83,6 +85,7 @@ class CalculateProvider with ChangeNotifier {
     int skladistenje = 0;
     int zbroj = 0;
     String ispis = "";
+    List<String> listaFormula = [];
     for (int i = 0;
         i <= _postavaZadatka.max_kapacitet;
         i += _postavaZadatka.rata) {
@@ -110,9 +113,10 @@ class CalculateProvider with ChangeNotifier {
           skladistenje.toString() +
           " = " +
           zbroj.toString();
-      //TODO ispis zapisati u neko polje/mapu za kasniji ispis postupka
+      listaFormula.add(ispis);
       q += _postavaZadatka.rata;
     }
+    ispisProblemaPoRazdobljima.putIfAbsent(1, () => listaFormula);
     izracuniPoRazdobljima.putIfAbsent(1, () => podaciRazdoblja);
   }
 
@@ -123,7 +127,7 @@ class CalculateProvider with ChangeNotifier {
     int skladistenjeProslo = 0;
     int zbroj = 0;
     String ispis = "";
-    Map<int, String> ispisProblema = {};
+    List<String> ispisProblema = [];
     Map<int, String> postavaNabave = {};
     List<PodaciRazdoblja> podaciRazdobljaZaSveDruge = [];
     for (int i = 0, j = 0;
@@ -196,7 +200,7 @@ class CalculateProvider with ChangeNotifier {
             skladistenjeProslo.toString() +
             " = " +
             zbroj.toString();
-        ispisProblema.putIfAbsent(t, () => ispis);
+        ispisProblema.add(ispis);
       }
       String rjesenje = "f(" +
           br.toString() +
@@ -204,9 +208,11 @@ class CalculateProvider with ChangeNotifier {
           i.toString() +
           "] = min -> " +
           min.toString();
-      ispisProblema.putIfAbsent(t, () => rjesenje);
+      ispisProblema.add(rjesenje);
+      ispisProblema.add("");
       podaciRazdobljaZaSveDruge.add(PodaciRazdoblja(q_i: q, f_i: min));
     }
+    ispisProblemaPoRazdobljima.putIfAbsent(br, () => ispisProblema);
     izracuniPoRazdobljima.putIfAbsent(br, () => podaciRazdobljaZaSveDruge);
   }
 

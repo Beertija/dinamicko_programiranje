@@ -28,10 +28,12 @@ class PostupakScreen extends StatelessWidget {
           ),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Column(
-                children: ispisProblemaPoRazdobljima
-                    .map((String red) => Center(child: Text(red.toString(), textScaleFactor: 1.1,)))
-                    .toList()),
+            child: SingleChildScrollView(
+              child: Column(
+                  children: ispisProblemaPoRazdobljima
+                      .map((String red) => Center(child: Text(red.toString(), textScaleFactor: 1.1,)))
+                      .toList()),
+            ),
           ),
         ));
   }

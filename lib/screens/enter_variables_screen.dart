@@ -90,7 +90,7 @@ class _UnosVarijabliScreenState extends State<UnosVarijabliScreen> {
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                         hintText: 'primjer: 20 40 20',
-                        labelText: 'Broj razdoblja'),
+                        labelText: 'Potražnja po razdobljima'),
                     validator: (value) {
                       return validateArray(value);
                     },
